@@ -18,7 +18,7 @@ WCHAR szWindowClass[MAX_LOADSTRING];            // 기본 창 클래스 이름�
 int Width = 0;
 int Height = 0;
 
-bool KeyHandled = false;
+bool KeyHandled = true;
 
 // 이 코드 모듈에 포함된 함수의 선언을 전달합니다:
 ATOM                MyRegisterClass(HINSTANCE hInstance);
@@ -188,52 +188,115 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
             Gdiplus::Pen BluePen(Gdiplus::Color(255,0,0,255), 2.0f);
             
             Gdiplus::Point Triangle[3] = {
-                Gdiplus::Point(100+Width,50+ Height),
-                Gdiplus::Point(50 + Width,100+ Height),
-                Gdiplus::Point(150 + Width,100+ Height)
+                Gdiplus::Point(200,90),
+                Gdiplus::Point(175,105),
+                Gdiplus::Point(225,105)
             };
 
             GraphicsInstance.FillPolygon(&BlueBrush, Triangle, 3);
-            GraphicsInstance.DrawRectangle(&BluePen, 70 + Width, 100+ Height, 60, 50);
+            GraphicsInstance.DrawRectangle(&BluePen, 185, 105, 30, 15);
+
+            Gdiplus::SolidBrush LeafBrush(Gdiplus::Color(255, 34, 139, 34));     // ForestGreen
+            Gdiplus::SolidBrush TrunkBrush(Gdiplus::Color(255, 139, 69, 19));    // SaddleBrown
+            Gdiplus::Pen TrunkPen(Gdiplus::Color(255, 139, 69, 19), 4.0f);
+
+            GraphicsInstance.FillEllipse(&LeafBrush, 100, 20, 60, 60); // x, y, w, h
+            GraphicsInstance.FillRectangle(&TrunkBrush, 121, 75, 20, 40);
+            GraphicsInstance.DrawLine(&TrunkPen, 121, 75, 111, 55);
+            GraphicsInstance.DrawLine(&TrunkPen, 126, 75, 121, 45);
+            GraphicsInstance.DrawLine(&TrunkPen, 131, 75, 131, 40);
+            GraphicsInstance.DrawLine(&TrunkPen, 136, 75, 141, 45);
+            GraphicsInstance.DrawLine(&TrunkPen, 141, 75, 151, 55);
+           
+            GraphicsInstance.FillEllipse(&LeafBrush, 230, 20, 60, 60); // x, y, w, h
+            GraphicsInstance.FillRectangle(&TrunkBrush, 251, 75, 20, 40);
+            GraphicsInstance.DrawLine(&TrunkPen, 251, 75, 241, 55);
+            GraphicsInstance.DrawLine(&TrunkPen, 256, 75, 251, 45);
+            GraphicsInstance.DrawLine(&TrunkPen, 261, 75, 261, 40);
+            GraphicsInstance.DrawLine(&TrunkPen, 266, 75, 271, 45);
+            GraphicsInstance.DrawLine(&TrunkPen, 271, 75, 281, 55);
+            
+            int personX = 200;
+            int personY = 175; // 집 아래쪽에 약간 떨어지게
+
+            Gdiplus::Pen PersonPen(Gdiplus::Color(255, 0, 0, 0), 2.0f);  // 검정색 얇은 선
+            Gdiplus::SolidBrush HeadBrush(Gdiplus::Color(255, 255, 224, 189)); // 살색 머리
+
+            personX += Width;
+            personY += Height;
+
+            // 머리
+            GraphicsInstance.FillEllipse(&HeadBrush, personX - 5, personY - 20, 10, 10); // (10x10 원)
+
+            // 몸통
+            GraphicsInstance.DrawLine(&PersonPen, personX, personY - 10, personX, personY + 10);
+
+            // 팔
+            GraphicsInstance.DrawLine(&PersonPen, personX - 7, personY, personX + 7, personY);
+
+            // 다리
+            GraphicsInstance.DrawLine(&PersonPen, personX, personY + 10, personX - 5, personY + 20);
+            GraphicsInstance.DrawLine(&PersonPen, personX, personY + 10, personX + 5, personY + 20);
+
+            GraphicsInstance.FillEllipse(&LeafBrush, 100, 120, 60, 60); // x, y, w, h
+            GraphicsInstance.FillRectangle(&TrunkBrush, 121, 175, 20, 40);
+            GraphicsInstance.DrawLine(&TrunkPen, 121, 175, 111, 155);
+            GraphicsInstance.DrawLine(&TrunkPen, 126, 175, 121, 145);
+            GraphicsInstance.DrawLine(&TrunkPen, 131, 175, 131, 140);
+            GraphicsInstance.DrawLine(&TrunkPen, 136, 175, 141, 145);
+            GraphicsInstance.DrawLine(&TrunkPen, 141, 175, 151, 155);
+
+            GraphicsInstance.FillEllipse(&LeafBrush, 230, 120, 60, 60); // x, y, w, h
+            GraphicsInstance.FillRectangle(&TrunkBrush, 251, 175, 20, 40);
+            GraphicsInstance.DrawLine(&TrunkPen, 251, 175, 241, 155);
+            GraphicsInstance.DrawLine(&TrunkPen, 256, 175, 251, 145);
+            GraphicsInstance.DrawLine(&TrunkPen, 261, 175, 261, 140);
+            GraphicsInstance.DrawLine(&TrunkPen, 266, 175, 271, 145);
+            GraphicsInstance.DrawLine(&TrunkPen, 271, 175, 281, 155);
+
+
+
+
+
 
 
             EndPaint(hWnd, &ps);
         }
         break;
     case WM_KEYDOWN:
-        if(!KeyHandled)
+        if(KeyHandled)
         {
             switch (wParam)
             {
             case VK_LEFT:
                 OutputDebugStringW(L"왼쪽키를 눌렀다.\n");
-                Width--;
+                Width -= 5;
                 InvalidateRect(hWnd, nullptr, TRUE);    // 창을 다시 그리도록 요청(WM_PAINT 메시지가 들어간다)
                 break;
             case VK_RIGHT:
                 OutputDebugStringW(L"오른쪽키를 눌렀다.\n");
-                Width++;
+                Width += 5;
                 InvalidateRect(hWnd, nullptr, TRUE);
                 break;
             case VK_UP:
                 OutputDebugStringW(L"위쪽키를 눌렀다.\n");
-                Height--;
+                Height -= 5;
                 InvalidateRect(hWnd, nullptr, TRUE);
                 break;
             case VK_DOWN:
                 OutputDebugStringW(L"아래쪽키를 눌렀다.\n");
-                Height++;
+                Height += 5;
                 InvalidateRect(hWnd, nullptr, TRUE);
                 break;
             case VK_ESCAPE:
-                //DestroyWindow(hWnd);    // hWnd 창을 닫아라 -> 프로그램을 꺼라(WM_DESTROY메시지가 들어간다.)
+                DestroyWindow(hWnd);    // hWnd 창을 닫아라 -> 프로그램을 꺼라(WM_DESTROY메시지가 들어간다.)
                 break;
             }
-            KeyHandled = true;
+            KeyHandled = false;
         }
         break;
     case WM_KEYUP:
-        KeyHandled = false;
+        KeyHandled = true;
         break;
     case WM_DESTROY:
         PostQuitMessage(0);
