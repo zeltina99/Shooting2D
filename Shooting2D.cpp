@@ -15,6 +15,11 @@ HINSTANCE hInst;                                // 현재 인스턴스입니다.
 WCHAR szTitle[MAX_LOADSTRING];                  // 제목 표시줄 텍스트입니다.
 WCHAR szWindowClass[MAX_LOADSTRING];            // 기본 창 클래스 이름입니다.
 
+int Width = 0;
+int Height = 0;
+
+bool KeyHandled = false;
+
 // 이 코드 모듈에 포함된 함수의 선언을 전달합니다:
 ATOM                MyRegisterClass(HINSTANCE hInstance);
 BOOL                InitInstance(HINSTANCE, int);
@@ -155,57 +160,80 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
             HDC hdc = BeginPaint(hWnd, &ps);
             
             // TODO: 여기에 hdc를 사용하는 그리기 코드를 추가합니다...
-            Gdiplus::Graphics GraphicsInstance(hdc);    // Graphics객체 만들기
 
-            Gdiplus::SolidBrush RedBrush(Gdiplus::Color(255, 255, 0, 0));
-            GraphicsInstance.FillEllipse(&RedBrush, 200, 50, 60, 60);
+            /*Gdiplus::SolidBrush RedBrush(Gdiplus::Color(255, 255, 0, 0));
+            GraphicsInstance.FillEllipse(&RedBrush, 200, 50, 60, 60);*/
 
             // ① 파란색 원 그리기
             
-            Gdiplus::SolidBrush BlueBrush(Gdiplus::Color(255, 0, 0, 255));
-            Gdiplus::Pen BluePen(Gdiplus::Color(255,0,0,255), 2.0f);
-            GraphicsInstance.DrawEllipse(&BluePen, 50, 150, 60, 60);
+            /*GraphicsInstance.DrawEllipse(&BluePen, 50, 150, 60, 60);*/
 
             // ② 기타 도형 그려보기
             
-            Gdiplus::Point Triangle[3] = {
-                Gdiplus::Point(100,50),
-                Gdiplus::Point(50,100),
-                Gdiplus::Point(150,100)
-            };
 
-            GraphicsInstance.FillPolygon(&BlueBrush, Triangle, 3);
             
             // ③ 집 모양 그려보기
 
-            GraphicsInstance.DrawRectangle(&BluePen, 70, 100, 60, 50);
 
-            GraphicsInstance.FillPie(&RedBrush, 300, 50, 50, 50, 00.0f, 120.0f);
+            /*GraphicsInstance.FillPie(&RedBrush, 300, 50, 50, 50, 00.0f, 120.0f);*/
 
-            Gdiplus::GraphicsPath Path;
+            /*Gdiplus::GraphicsPath Path;
             Path.AddLine(Gdiplus::Point(10, 10), Gdiplus::Point(300, 10));
             Path.AddLine(Gdiplus::Point(300, 10), Gdiplus::Point(300, 100));
-            GraphicsInstance.FillPath(&BlueBrush, &Path);
+            GraphicsInstance.FillPath(&BlueBrush, &Path);*/
+            
+            Gdiplus::Graphics GraphicsInstance(hdc);    // Graphics객체 만들기
+            
+            Gdiplus::SolidBrush BlueBrush(Gdiplus::Color(255, 0, 0, 255));
+            Gdiplus::Pen BluePen(Gdiplus::Color(255,0,0,255), 2.0f);
+            
+            Gdiplus::Point Triangle[3] = {
+                Gdiplus::Point(100+Width,50+ Height),
+                Gdiplus::Point(50 + Width,100+ Height),
+                Gdiplus::Point(150 + Width,100+ Height)
+            };
 
+            GraphicsInstance.FillPolygon(&BlueBrush, Triangle, 3);
+            GraphicsInstance.DrawRectangle(&BluePen, 70 + Width, 100+ Height, 60, 50);
 
 
             EndPaint(hWnd, &ps);
         }
         break;
     case WM_KEYDOWN:
-        switch (wParam)
+        if(!KeyHandled)
         {
-        case VK_LEFT:
-            OutputDebugStringW(L"왼쪽키를 눌렀다.\n");
-            InvalidateRect(hWnd, nullptr, TRUE);    // 창을 다시 그리도록 요청(WM_PAINT 메시지가 들어간다)
-            break;
-        case VK_RIGHT:
-            OutputDebugStringW(L"오른쪽키를 눌렀다.\n");
-            InvalidateRect(hWnd, nullptr, TRUE);
-            break;
-        case VK_ESCAPE:
-            DestroyWindow(hWnd);    // hWnd 창을 닫아라 -> 프로그램을 꺼라(WM_DESTROY메시지가 들어간다.)
+            switch (wParam)
+            {
+            case VK_LEFT:
+                OutputDebugStringW(L"왼쪽키를 눌렀다.\n");
+                Width--;
+                InvalidateRect(hWnd, nullptr, TRUE);    // 창을 다시 그리도록 요청(WM_PAINT 메시지가 들어간다)
+                break;
+            case VK_RIGHT:
+                OutputDebugStringW(L"오른쪽키를 눌렀다.\n");
+                Width++;
+                InvalidateRect(hWnd, nullptr, TRUE);
+                break;
+            case VK_UP:
+                OutputDebugStringW(L"위쪽키를 눌렀다.\n");
+                Height--;
+                InvalidateRect(hWnd, nullptr, TRUE);
+                break;
+            case VK_DOWN:
+                OutputDebugStringW(L"아래쪽키를 눌렀다.\n");
+                Height++;
+                InvalidateRect(hWnd, nullptr, TRUE);
+                break;
+            case VK_ESCAPE:
+                //DestroyWindow(hWnd);    // hWnd 창을 닫아라 -> 프로그램을 꺼라(WM_DESTROY메시지가 들어간다.)
+                break;
+            }
+            KeyHandled = true;
         }
+        break;
+    case WM_KEYUP:
+        KeyHandled = false;
         break;
     case WM_DESTROY:
         PostQuitMessage(0);
@@ -218,7 +246,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 
 // 실습
 // ① 집 모양을 그리고 키보드 입력으로 위아래좌우로 움직이기
-// ② 누르고 있을 때 한번만 움직여야 한다.
+// ② 누르고 있을 때 한번만 움직여야 한다.(WM_KEYUP 활용)
 
 
 // 정보 대화 상자의 메시지 처리기입니다.
