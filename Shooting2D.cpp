@@ -177,6 +177,9 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
             Gdiplus::SolidBrush RedBrush(Gdiplus::Color(255, 255, 0, 0));
             GraphicsInstance.FillEllipse(&RedBrush, 200, 50, 60, 60);
 
+            // ① 파란색 원 그리기
+            // ② 기타 도형 그려보기
+
             EndPaint(hWnd, &ps);
         }
         break;
