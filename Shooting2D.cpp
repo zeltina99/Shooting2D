@@ -242,6 +242,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
                 break;
             case VK_ESCAPE:
                 DestroyWindow(hWnd);    // hWnd 창을 닫아라 -> 프로그램을 꺼라(WM_DESTROY메시지가 들어간다.)
+                break;
             }
             G_KeyWasPressedMap[static_cast<InputDirection>(wParam)] = true;
         }
