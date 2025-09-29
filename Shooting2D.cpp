@@ -178,7 +178,33 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
             GraphicsInstance.FillEllipse(&RedBrush, 200, 50, 60, 60);
 
             // ① 파란색 원 그리기
+            
+            Gdiplus::SolidBrush BlueBrush(Gdiplus::Color(255, 0, 0, 255));
+            Gdiplus::Pen BluePen(Gdiplus::Color(255,0,0,255), 2.0f);
+            GraphicsInstance.DrawEllipse(&BluePen, 50, 150, 60, 60);
+
             // ② 기타 도형 그려보기
+            
+            Gdiplus::Point Triangle[3] = {
+                Gdiplus::Point(100,50),
+                Gdiplus::Point(50,100),
+                Gdiplus::Point(150,100)
+            };
+
+            GraphicsInstance.FillPolygon(&BlueBrush, Triangle, 3);
+            
+            // ③ 집 모양 그려보기
+
+            GraphicsInstance.DrawRectangle(&BluePen, 70, 100, 60, 50);
+
+            GraphicsInstance.FillPie(&RedBrush, 300, 50, 50, 50, 00.0f, 120.0f);
+
+            Gdiplus::GraphicsPath Path;
+            Path.AddLine(Gdiplus::Point(10, 10), Gdiplus::Point(300, 10));
+            Path.AddLine(Gdiplus::Point(300, 10), Gdiplus::Point(300, 100));
+            GraphicsInstance.FillPath(&BlueBrush, &Path);
+
+
 
             EndPaint(hWnd, &ps);
         }
