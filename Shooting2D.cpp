@@ -32,6 +32,14 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
     // TODO: 여기에 코드를 입력합니다.
 
     _CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
+    
+    // GDI+ 초기화
+    ULONG_PTR Token;
+    Gdiplus::GdiplusStartupInput StartupInput;
+    Gdiplus::GdiplusStartup(&Token, &StartupInput, nullptr);
+    
+
+
 
     // 전역 문자열을 초기화합니다.
     LoadStringW(hInstance, IDS_APP_TITLE, szTitle, MAX_LOADSTRING);
@@ -59,6 +67,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
         }
     }
 
+    Gdiplus::GdiplusShutdown(Token);    // GDI+ 정리하기
     return (int) msg.wParam;
 }
 
@@ -161,7 +170,13 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
         {
             PAINTSTRUCT ps;
             HDC hdc = BeginPaint(hWnd, &ps);
+            
             // TODO: 여기에 hdc를 사용하는 그리기 코드를 추가합니다...
+            Gdiplus::Graphics GraphicsInstance(hdc);    // Graphics객체 만들기
+
+            Gdiplus::SolidBrush RedBrush(Gdiplus::Color(255, 255, 0, 0));
+            GraphicsInstance.FillEllipse(&RedBrush, 200, 50, 60, 60);
+
             EndPaint(hWnd, &ps);
         }
         break;
