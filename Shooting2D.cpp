@@ -216,49 +216,34 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
         }
         break;
     case WM_KEYDOWN:
-        switch (wParam)
+        if (!G_KeyWasPressedMap[static_cast<InputDirection>(wParam)])
         {
-        case VK_LEFT:
-            if(!G_KeyWasPressedMap[static_cast<InputDirection>(wParam)])
+            switch (wParam)
             {
-                G_KeyWasPressedMap[static_cast<InputDirection>(wParam)] = true;
+            case VK_LEFT:
                 OutputDebugStringW(L"왼쪽키를 눌렀다.\n");
                 G_HousePosition.X -= 10;
                 InvalidateRect(hWnd, nullptr, TRUE);
-            }
-            break;
-        case VK_RIGHT:
-            if (!G_KeyWasPressedMap[static_cast<InputDirection>(wParam)])
-            {
-                G_KeyWasPressedMap[static_cast<InputDirection>(wParam)] = true;
+                break;
+            case VK_RIGHT:
                 OutputDebugStringW(L"오른쪽키를 눌렀다.\n");
                 G_HousePosition.X += 10;
                 InvalidateRect(hWnd, nullptr, TRUE);
-            }
-            break;
-        case VK_UP:
-            if (!G_KeyWasPressedMap[static_cast<InputDirection>(wParam)])
-            {
-                G_KeyWasPressedMap[static_cast<InputDirection>(wParam)] = true;
+                break;
+            case VK_UP:
                 OutputDebugStringW(L"위쪽키를 눌렀다.\n");
                 G_HousePosition.Y -= 10;
                 InvalidateRect(hWnd, nullptr, TRUE);
-            }
-            break;
-        case VK_DOWN:
-            if (!G_KeyWasPressedMap[static_cast<InputDirection>(wParam)])
-            {
-                G_KeyWasPressedMap[static_cast<InputDirection>(wParam)] = true;
+                break;
+            case VK_DOWN:
                 OutputDebugStringW(L"아래쪽키를 눌렀다.\n");
                 G_HousePosition.Y += 10;
                 InvalidateRect(hWnd, nullptr, TRUE);
-            }
-            break;
-        case VK_ESCAPE:
-            if (!G_KeyWasPressedMap[static_cast<InputDirection>(wParam)])
-            {
+                break;
+            case VK_ESCAPE:
                 DestroyWindow(hWnd);    // hWnd 창을 닫아라 -> 프로그램을 꺼라(WM_DESTROY메시지가 들어간다.)
             }
+            G_KeyWasPressedMap[static_cast<InputDirection>(wParam)] = true;
         }
         break;
     case WM_KEYUP:
