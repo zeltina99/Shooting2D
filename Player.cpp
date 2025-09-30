@@ -47,7 +47,8 @@ void Player::Render(Gdiplus::Graphics* InGraphics)
         Gdiplus::SolidBrush RedBrush(Gdiplus::Color(255, 255, 0, 0));
         InGraphics->FillEllipse(
             &RedBrush,
-            100, 100,
+            static_cast<int>(Position.X - PixelSize * Pivot.X),
+            static_cast<int>(Position.Y - PixelSize * Pivot.Y),
             PixelSize, PixelSize);
     }
 }
@@ -59,24 +60,27 @@ void Player::HandleKeyState(WPARAM InKey, bool InIsPressed)
     {
         KeyWasPressedMap[static_cast<InputDirection>(InKey)] = InIsPressed;
 
-        if (InKey == VK_LEFT)
+        if ((InKey == VK_LEFT) && InIsPressed)
         {
             Position.X -= Speed;
             if (Position.X < (0 + PixelSize))
             {
-                Position.X = 0 + PixelSize;
+                Position.X = static_cast<float>(g_ScreenSize.X - PixelSize);
+               
             }
             InvalidateRect(g_hMainWindow, nullptr, FALSE);
         }
-        else if (InKey == VK_RIGHT)
+        else if ((InKey == VK_RIGHT) && InIsPressed)
         {
             Position.X += Speed;
             if ((g_ScreenSize.X - PixelSize) < Position.X)
             {
-                Position.X = static_cast<float>(g_ScreenSize.X - PixelSize);
+                Position.X = 0 + PixelSize;
             }
 
             InvalidateRect(g_hMainWindow, nullptr, FALSE);
         }
     }
 }
+
+

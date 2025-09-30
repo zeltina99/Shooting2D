@@ -45,6 +45,7 @@ private:
 
 	// 플레이어 이미지가 들어있을 비트맵
 	Gdiplus::Bitmap* Image = nullptr;   // 플레이어가 그려질 종이
+
 };
 
 // 실습

@@ -20,6 +20,9 @@ HWND g_hMainWindow = nullptr;
 Gdiplus::Point g_AppPosition(100, 100);
 Gdiplus::Point g_ScreenSize(600, 800);
 
+int BackgroundOffsetY = 0;
+static constexpr int StarSpeed = 2;
+
 Gdiplus::Point g_HousePosition(100, 100);
 constexpr int g_HouseVerticesCount = 7;
 const Gdiplus::Point g_HouseVertices[g_HouseVerticesCount] =
@@ -35,6 +38,7 @@ Gdiplus::Graphics* g_BackBufferGraphics = nullptr;  // 백버퍼용 종이에 �
 
 
 Player* g_Player = nullptr;
+BackGround* g_Back = nullptr;
 
 // 이 코드 모듈에 포함된 함수의 선언을 전달합니다:
 ATOM                MyRegisterClass(HINSTANCE hInstance);
@@ -58,6 +62,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
     Gdiplus::GdiplusStartupInput StartupInput;
     Gdiplus::GdiplusStartup(&Token, &StartupInput, nullptr);
     g_Player = new Player(L"./Images/Airplane.png");
+    g_Back = new BackGround(L"./Images/EffectB.png");
 
     // 전역 문자열을 초기화합니다.
     LoadStringW(hInstance, IDS_APP_TITLE, szTitle, MAX_LOADSTRING);
@@ -91,11 +96,13 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
             }
         }
 
-
+        InvalidateRect(g_hMainWindow, nullptr, FALSE);  // 매 프레임마다 WM_PAINT요청
     }
 
     delete g_Player;
     g_Player = nullptr;
+    delete g_Back;
+    g_Back = nullptr;
     // GDI+ 정리하기
     Gdiplus::GdiplusShutdown(Token);
     return (int)msg.wParam;
@@ -205,6 +212,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
     {
         PAINTSTRUCT ps;
         HDC hdc = BeginPaint(hWnd, &ps);
+        
 
         // TODO: 여기에 hdc를 사용하는 그리기 코드를 추가합니다...
         if (g_BackBufferGraphics)   // g_BackBufferGraphics 필수
@@ -222,7 +230,8 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
                     g_BackBufferGraphics->FillRectangle(&YelloBrush, 50 * x, 50 * y, 5, 5);
                 }
             }
-
+            
+            InvalidateRect(hWnd, nullptr, FALSE);
             Gdiplus::Pen GreenPen(Gdiplus::Color(255, 0, 255, 0), 2.0f);
             Gdiplus::Point Positions[g_HouseVerticesCount];
             for (int i = 0; i < g_HouseVerticesCount; i++)
@@ -231,8 +240,9 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
             }
             g_BackBufferGraphics->DrawPolygon(&GreenPen, Positions, g_HouseVerticesCount);
             //g_BackBufferGraphics->FillPolygon(&GreenBrush, Positions, g_HouseVerticesCount);
-
            
+            g_Back->BackRender(g_BackBufferGraphics);
+
             g_Player->Render(g_BackBufferGraphics);
 
             Gdiplus::Graphics GraphicsInstance(hdc);    // Graphics객체 만들기
