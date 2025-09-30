@@ -3,6 +3,7 @@
 
 #include "framework.h"
 #include "Shooting2D.h"
+#include "Player.h"
 
 //#include <crtdbg.h>
 //#define _CRTDBG_MAP_ALLOC
@@ -14,6 +15,8 @@
 HINSTANCE hInst;                                // 현재 인스턴스입니다.
 WCHAR szTitle[MAX_LOADSTRING];                  // 제목 표시줄 텍스트입니다.
 WCHAR szWindowClass[MAX_LOADSTRING];            // 기본 창 클래스 이름입니다.
+
+Player PlayerAirplane;
 
 Gdiplus::Point g_AppPosition(100, 100);
 Gdiplus::Point g_ScreenSize(800, 600);
@@ -30,7 +33,7 @@ std::unordered_map<InputDirection, bool> g_KeyWasPressedMap;
 Gdiplus::Bitmap* g_BackBuffer = nullptr;    // 백버퍼용 종이
 Gdiplus::Graphics* g_BackBufferGraphics = nullptr;  // 백버퍼용 종이에 그리기 위한 도구
 
-Gdiplus::Bitmap* g_PlayerImage = nullptr;   // 플레이어가 그려질 종이
+//Gdiplus::Bitmap* g_PlayerImage = nullptr;   // 플레이어가 그려질 종이
 constexpr int PlayerImageSize = 64;
 
 
@@ -182,21 +185,11 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
             // 혹시 안만들어졌을 때를 대비한 에러 출력
             MessageBox(hWnd, L"백 버퍼 그래픽스 생성 실패", L"오류", MB_OK | MB_ICONERROR);
         }
-
-        g_PlayerImage = new Gdiplus::Bitmap(L"./Images/Airplane.png");  // 플레이어 이미지 로딩
-        if (g_PlayerImage->GetLastStatus() != Gdiplus::Ok)
-        {
-            // 정상적으로 파일 로딩이 안됬다.
-            delete g_PlayerImage;           // 실패했으면 즉시 해제
-            g_PlayerImage = nullptr;
-            MessageBox(hWnd, L"플레이어 이미지 로드 실패", L"오류", MB_OK | MB_ICONERROR);
-        }
+        PlayerAirplane.LoadImageW(hWnd);
         break;
     case WM_DESTROY:
         // 윈도우가 삭제되었을 때 날아오는 메세지
-        delete g_PlayerImage;         
-        g_PlayerImage = nullptr;
-
+        PlayerAirplane.ReleaseImage();
         delete g_BackBufferGraphics;
         g_BackBufferGraphics = nullptr;
         delete g_BackBuffer;
@@ -234,26 +227,24 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
             g_BackBufferGraphics->DrawPolygon(&GreenPen, Positions, g_HouseVerticesCount);
             //g_BackBufferGraphics->FillPolygon(&GreenBrush, Positions, g_HouseVerticesCount);
 
-            if(g_PlayerImage)
-            {
-                // g_PlayerImage가 로딩되어 있다.
-                g_BackBufferGraphics->DrawImage(
-                    g_PlayerImage,  // 그려질 이미지
-                    100, 100,       // 그려질 위치
-                    PlayerImageSize, PlayerImageSize);  // 그려질 사이즈
-            }
-            else
-            {
-                // 플레이어 이미지가 없으면 원을 대신 그림
-                Gdiplus::SolidBrush RedBrush(Gdiplus::Color(255, 255, 0, 0));
-                g_BackBufferGraphics->FillEllipse(
-                    &RedBrush,
-                    100, 100,
-                    PlayerImageSize, PlayerImageSize);
-            }
+            //if(g_PlayerImage)
+            //{
+            //    
+            //}
+            //else
+            //{
+            //    // 플레이어 이미지가 없으면 원을 대신 그림
+            //    Gdiplus::SolidBrush RedBrush(Gdiplus::Color(255, 255, 0, 0));
+            //    g_BackBufferGraphics->FillEllipse(
+            //        &RedBrush,
+            //        100, 100,
+            //        PlayerImageSize, PlayerImageSize);
+            //}
 
+            PlayerAirplane.Draw(g_BackBufferGraphics);
             Gdiplus::Graphics GraphicsInstance(hdc);    // Graphics객체 만들기
             GraphicsInstance.DrawImage(g_BackBuffer, 0, 0);
+           
         }
 
         EndPaint(hWnd, &ps);
@@ -270,7 +261,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
         {
             g_KeyWasPressedMap[static_cast<InputDirection>(wParam)] = true;
             OutputDebugStringW(L"왼쪽키를 눌렀다.\n");
-            g_HousePosition.X -= 10;
+            PlayerAirplane.Move(-10, 0);
             InvalidateRect(hWnd, nullptr, FALSE);    // 창을 다시 그리도록 요청(WM_PAINT 메시지가 들어간다)
         }
         break;
@@ -279,7 +270,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
         {
             g_KeyWasPressedMap[static_cast<InputDirection>(wParam)] = true;
             OutputDebugStringW(L"오른쪽키를 눌렀다.\n");
-            g_HousePosition.X += 10;
+            PlayerAirplane.Move(+10, 0);
             InvalidateRect(hWnd, nullptr, FALSE);   // 3번째 FALSE로 WM_ERASEBKGND 발동 안되게 하기
         }
         break;
@@ -288,7 +279,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
         {
             g_KeyWasPressedMap[static_cast<InputDirection>(wParam)] = true;
             OutputDebugStringW(L"위쪽키를 눌렀다.\n");
-            g_HousePosition.Y -= 10;
+            //g_HousePosition.Y -= 10;
             InvalidateRect(hWnd, nullptr, FALSE);
         }
         break;
@@ -297,7 +288,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
         {
             g_KeyWasPressedMap[static_cast<InputDirection>(wParam)] = true;
             OutputDebugStringW(L"아래쪽키를 눌렀다.\n");
-            g_HousePosition.Y += 10;
+            //g_HousePosition.Y += 10;
             InvalidateRect(hWnd, nullptr, FALSE);
         }
         break;
@@ -329,12 +320,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
     return 0;
 }
 
-/*
-  실습  Player 클래스 만들어보기
-      ①  피봇 위치는 한가운데
-      ②  이미지로 표시
-      ③  키보드 입력으로 좌우 이동
-*/
+
 
 
 // 정보 대화 상자의 메시지 처리기입니다.
