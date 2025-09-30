@@ -23,6 +23,8 @@ Gdiplus::Point g_ScreenSize(600, 800);
 int BackgroundOffsetY = 0;
 static constexpr int StarSpeed = 2;
 
+auto lastTime = std::chrono::steady_clock::now();
+
 Gdiplus::Point g_HousePosition(100, 100);
 constexpr int g_HouseVerticesCount = 7;
 const Gdiplus::Point g_HouseVertices[g_HouseVerticesCount] =
@@ -95,7 +97,11 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
                 DispatchMessage(&msg);
             }
         }
+        auto currentTime = std::chrono::steady_clock::now();
+        std::chrono::duration<float> elapsed = currentTime - lastTime;
+        float deltaTime = elapsed.count(); // 초 단위 float
 
+        lastTime = currentTime;
         InvalidateRect(g_hMainWindow, nullptr, FALSE);  // 매 프레임마다 WM_PAINT요청
     }
 
@@ -201,7 +207,6 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
         }
         break;
     case WM_DESTROY:
-
         delete g_BackBufferGraphics;
         g_BackBufferGraphics = nullptr;
         delete g_BackBuffer;

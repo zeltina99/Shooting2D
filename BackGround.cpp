@@ -47,6 +47,6 @@ void BackGround::BackRender(Gdiplus::Graphics* Graphics)
     }
 
     // 스크롤 이동
-    OffsetY = (OffsetY + ScrollSpeed) % BGImage->GetHeight();
+    OffsetY = (OffsetY + ScrollSpeed) % ImgHeight;
 }
 
