@@ -18,8 +18,11 @@ void GameManager::Initialize()
     background->SetRenderLayer(RenderLayer::Background);
     AddActor(background);
     MainPlayer = new Player(L"./Images/Airplane.png");
+    MainPlayer->SetRenderLayer(RenderLayer::Player);
     AddActor(MainPlayer);
-    AddActor(new TestGridActor());
+    TestGridActor* GridActor = new TestGridActor();
+    GridActor->SetRenderLayer(RenderLayer::Test);
+    AddActor(GridActor);
 }
 
 void GameManager::Destroy()
@@ -47,16 +50,29 @@ void GameManager::Tick(float InDeltaTime)
 
 void GameManager::Render()
 {
-    if (BackBufferGraphics)   // g_BackBufferGraphics 필수
+    if (BackBufferGraphics)   // BackBufferGraphics 필수
     {
         BackBufferGraphics->Clear(Gdiplus::Color(255, 0, 0, 0));
 
+        std::map<RenderLayer, std::vector<Actor*>> LayeredActors;
+
         for (Actor* Actor : Actors)
         {
-            Actor->OnRender(BackBufferGraphics);
+            if (Actor)
+            {
+                RenderLayer layer = Actor->GetRenderLayer();
+                LayeredActors[layer].push_back(Actor);
+            }
         }
-
+        for (auto& pair : LayeredActors)
+        {
+            for (Actor* Actor : pair.second)
+            {
+                Actor->OnRender(BackBufferGraphics);  // 또는 OnRender
+            }
+        }
     }
+   
   
 }
 

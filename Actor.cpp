@@ -1,5 +1,6 @@
 #include "Actor.h"
 #include "GameManager.h"
+#include "ResourceManager.h"
 
 Actor::Actor(const wchar_t* InImagePath)
 {
@@ -11,9 +12,9 @@ Actor::Actor(const wchar_t* InImagePath)
             // 정상적으로 파일 로딩이 안됬다.
             delete Image;           // 실패했으면 즉시 해제
             Image = nullptr;
-            OutputDebugString(L"플레이어 이미지 로드 실패");
+            OutputDebugString(L"이미지 로드 실패");
             MessageBox(GameManager::Get().GetMainWindowHandle(), 
-                L"플레이어 이미지 로드 실패", L"오류", MB_OK | MB_ICONERROR);
+                L"이미지 로드 실패", L"오류", MB_OK | MB_ICONERROR);
         }
     }
 }

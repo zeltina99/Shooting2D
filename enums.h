@@ -20,3 +20,13 @@ enum class RenderLayer
 	Test,
 	Misc
 };
+
+enum class BitmapLayer
+{
+	Background = 0,
+	Player,
+	Bomb,
+	UI,
+	Test,
+	Misc
+};

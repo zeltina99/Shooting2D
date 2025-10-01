@@ -15,6 +15,7 @@ public:
 	inline const PointF& GetPosition() const { return Position; }
 	inline int GetSize() const { return Size; }
 	inline const PointF& GetPivot() const { return Pivot; }
+	inline RenderLayer GetRenderLayer() const { return TargetRenderLayer; }
 
 	// Setter
 	inline void SetPosition(float InX, float InY) { Position.X = InX; Position.Y = InY; }

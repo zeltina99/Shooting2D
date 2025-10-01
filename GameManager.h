@@ -1,6 +1,7 @@
 #pragma once
 #include <Windows.h>
 #include <vector>
+#include <map>
 #include "Common.h"
 #include "Actor.h"
 #include "Player.h"
@@ -32,7 +33,8 @@ public:
 	inline Gdiplus::Bitmap* GetBackBuffer() const { return BackBuffer; }
 
 	// Setter
-	inline void SetMainWindowHandle(HWND InWindowHandle) {
+	inline void SetMainWindowHandle(HWND InWindowHandle)
+	{
 		if (hMainWindow == nullptr)
 		{
 			hMainWindow = InWindowHandle;	// 딱 한번만 설정할 수 있는 세터
@@ -57,4 +59,6 @@ private:
 	Gdiplus::Graphics* BackBufferGraphics = nullptr;  // 백버퍼용 종이에 그리기 위한 도구
 
 	Player* MainPlayer = nullptr;
+
+
 };
