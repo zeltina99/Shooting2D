@@ -20,12 +20,6 @@ HWND g_hMainWindow = nullptr;
 Gdiplus::Point g_AppPosition(100, 100);
 Gdiplus::Point g_ScreenSize(600, 800);
 
-Gdiplus::Point g_HousePosition(100, 100);
-constexpr int g_HouseVerticesCount = 7;
-const Gdiplus::Point g_HouseVertices[g_HouseVerticesCount] =
-{
-    {0,-100},{50,-50},{30,-50},{30,0},{-30,0},{-30,-50},{-50,-50}
-};
 
 
 
@@ -36,6 +30,8 @@ Gdiplus::Graphics* g_BackBufferGraphics = nullptr;  // 백버퍼용 종이에 �
 
 Player* g_Player = nullptr;
 Background* g_Background = nullptr;
+TestGridActor* g_TestGridActor = nullptr;
+TestHouseActor* g_TestHouseActor = nullptr;
 
 // 이 코드 모듈에 포함된 함수의 선언을 전달합니다:
 ATOM                MyRegisterClass(HINSTANCE hInstance);
@@ -60,6 +56,10 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
     Gdiplus::GdiplusStartup(&Token, &StartupInput, nullptr);
     g_Player = new Player(L"./Images/Airplane.png");
     g_Background = new Background(L"./Images/EffectB.png");
+    g_TestGridActor = new TestGridActor();
+    g_TestHouseActor = new TestHouseActor();
+    g_TestHouseActor->SetPosition(200, 200);
+    g_TestHouseActor->SetPivot(1.0f, 1.0f);
 
     // 전역 문자열을 초기화합니다.
     LoadStringW(hInstance, IDS_APP_TITLE, szTitle, MAX_LOADSTRING);
@@ -103,7 +103,10 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 
         InvalidateRect(g_hMainWindow, nullptr, FALSE);
     }
-
+    delete g_TestHouseActor;
+    g_TestHouseActor = nullptr;
+    delete g_TestGridActor;
+    g_TestGridActor = nullptr;
     delete g_Background;
     g_Background = nullptr;
     delete g_Player;
@@ -222,28 +225,13 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
         if (g_BackBufferGraphics)   // g_BackBufferGraphics 필수
         {
             g_BackBufferGraphics->Clear(Gdiplus::Color(255, 0, 0, 0));
-            Gdiplus::SolidBrush GreenBrush(Gdiplus::Color(255, 0, 255, 0));
-            Gdiplus::SolidBrush BlueBrush(Gdiplus::Color(255, 0, 0, 255));
-            Gdiplus::SolidBrush YelloBrush(Gdiplus::Color(255, 255, 255, 0));
+           
 
             g_Background->OnRender(g_BackBufferGraphics);
 
-            for (int y = 0; y < 16; y++)
-            {
-                for (int x = 0; x < 12; x++)
-                {
-                    g_BackBufferGraphics->FillRectangle(&BlueBrush, 50 * x, 50 * y, 5, 5);
-                }
-            }
-
-            Gdiplus::Pen GreenPen(Gdiplus::Color(255, 0, 255, 0), 2.0f);
-            Gdiplus::Point Positions[g_HouseVerticesCount];
-            for (int i = 0; i < g_HouseVerticesCount; i++)
-            {
-                Positions[i] = g_HousePosition + g_HouseVertices[i];
-            }
-            g_BackBufferGraphics->DrawPolygon(&GreenPen, Positions, g_HouseVerticesCount);
-            //g_BackBufferGraphics->FillPolygon(&GreenBrush, Positions, g_HouseVerticesCount);
+            g_TestGridActor->OnRender(g_BackBufferGraphics);
+            
+            g_TestHouseActor->OnRender(g_BackBufferGraphics);
 
             
             g_Player->OnRender(g_BackBufferGraphics);
