@@ -75,6 +75,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
     HACCEL hAccelTable = LoadAccelerators(hInstance, MAKEINTRESOURCE(IDC_SHOOTING2D));
 
     MSG msg;
+    ULONGLONG LastTime = GetTickCount64();
 
     // 3. 메시지 루프
     // 기본 메시지 루프입니다:(메세지 큐에 들어온 메세지들을 하나씩 처리하는 부분)
@@ -92,7 +93,14 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
                 DispatchMessage(&msg);
             }
         }
-        g_Background->Tick();
+        
+        ULONGLONG CurrentTime = GetTickCount64();
+        float DeltaTime = (CurrentTime - LastTime) / 1000.0f;   // 결과를 초 단위로 변경
+        LastTime = CurrentTime;
+
+        g_Background->Tick(DeltaTime);
+        g_Player->Tick(DeltaTime);
+
         InvalidateRect(g_hMainWindow, nullptr, FALSE);
     }
 

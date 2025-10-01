@@ -4,6 +4,7 @@ Background::Background(const wchar_t* InImagePath)
 {
     Pivot.X = 0;    // 왼쪽 위가 피봇
     Pivot.Y = 0;
+    Position.Y = -PixelSize;
     Image = new Gdiplus::Bitmap(InImagePath);  //  이미지 로딩
     if (Image->GetLastStatus() != Gdiplus::Ok)
     {
@@ -24,9 +25,9 @@ Background::~Background()
     }
 }
 
-void Background::Tick()
+void Background::Tick(float InDeltaTime)
 {
-    Offset += 1.0f;
+    Offset += Speed * InDeltaTime;
 }
 
 void Background::Render(Gdiplus::Graphics* InGraphics)
@@ -44,21 +45,24 @@ void Background::Render(Gdiplus::Graphics* InGraphics)
         int HeightCount = g_ScreenSize.Y / PixelSize + 2;
         int TotalHeight = (PixelSize - 3) * HeightCount;
 
-        for(int y=0; y < HeightCount; y++)
+        for(int y = -1; y < HeightCount; y++)
         {
+           
             for (int x = 0; x < WidthCount; x++)
             {
                 int NewX = static_cast<int>(Position.X - PixelSize * Pivot.X + (PixelSize - 3) * x);
                 InGraphics->DrawImage(
                     Image,                  // 그려질 이미지
                     NewX,
-                    NewY,     // 그려질 위치
+                    NewY,                    // 그려질 위치
                     PixelSize, PixelSize);  // 그려질 사이즈
             }
             NewY += (PixelSize - 3);
-            NewY = (NewY % TotalHeight);
+            if (NewY > TotalHeight)
+            {
+                NewY -= (TotalHeight + (PixelSize - 3));
+            }
         }
-
        
     }
 }

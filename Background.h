@@ -9,7 +9,7 @@ public:
 	Background(const wchar_t* InImagePath);	// 무조건 파일 경로를 받아야 생성할 수 있다.
 	~Background();
 
-	void Tick();
+	void Tick(float InDeltaTime);
 	void Render(Gdiplus::Graphics* InGraphics);
 
 private:
@@ -22,7 +22,7 @@ private:
 	PointF Position = { 0.0f, 0.0f };
 
 	// 이동 속도
-	float Speed = 10.0f;
+	float Speed = 50.0f;
 
 	// 이미지가 들어있을 비트맵
 	Gdiplus::Bitmap* Image = nullptr;   

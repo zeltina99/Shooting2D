@@ -21,6 +21,7 @@ public:
 	Player(const wchar_t* InImagePath);	// 무조건 파일 경로를 받아야 생성할 수 있다.
 	~Player();
 
+	void Tick(float InDeltaTime);
 	void Render(Gdiplus::Graphics* InGraphics);
 	void HandleKeyState(WPARAM InKey, bool InIsPressed);
 
@@ -35,7 +36,7 @@ private:
 	PointF Position = { 0.0f, 0.0f };
 
 	// 플레이어의 이동 속도
-	float Speed = 10.0f;
+	float Speed = 200.0f;
 
 	// 플레이어 키 입력 상태
 	std::unordered_map<InputDirection, bool> KeyWasPressedMap;
