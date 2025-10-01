@@ -24,15 +24,15 @@ public:
 protected:
 	// 위치
 	PointF Position = { 0.0f, 0.0f };
-	
+
 	// 크기
 	int Size = 64;
-	
+
 	// 중심점
-	PointF Pivot = { 0.5f, 0.5f };	// Pivot 기본 값은 한가운데
+	PointF Pivot = { 0.5f, 0.5f }; // Pivot 기본 값은 한가운데
 
 	// 이미지가 들어있을 비트맵
-	Gdiplus::Bitmap* Image = nullptr;
+	Gdiplus::Bitmap* Image = nullptr;   // 플레이어가 그려질 종이		
 
 };
 

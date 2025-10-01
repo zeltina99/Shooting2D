@@ -1,5 +1,6 @@
 #include "Player.h"
 #include "Background.h"
+#include "GameManager.h"
 
 Player::Player(const wchar_t* InImagePath)
     : Actor(InImagePath)
@@ -25,9 +26,9 @@ void Player::OnTick(float InDeltaTime)
     }
     if (Position.X < (0 - Size * 0.5f))
     {
-        Position.X = g_ScreenSize.X + Size * 0.5f; // 순환 이동
+        Position.X = GameManager::ScreenWidth + Size * 0.5f; // 순환 이동
     }
-    else if ((g_ScreenSize.X + Size * 0.5f) < Position.X)
+    else if ((GameManager::ScreenWidth + Size * 0.5f) < Position.X)
     {
         Position.X = static_cast<float>(0 - Size * 0.5f);
     }
@@ -52,6 +53,8 @@ void Player::OnRender(Gdiplus::Graphics* InGraphics)
     
 }
 
+
+
 void Player::HandleKeyState(WPARAM InKey, bool InIsPressed)
 {
 
@@ -64,14 +67,14 @@ void Player::HandleKeyState(WPARAM InKey, bool InIsPressed)
         //    Position.X -= Speed;
         //    if (Position.X < (0 - PixelSize * 0.5f) )
         //    {
-        //        Position.X = g_ScreenSize.X + PixelSize * 0.5f; // 순환 이동
+        //        Position.X = GameManager::ScreenWidth + PixelSize * 0.5f; // 순환 이동
         //    }
         //    //InvalidateRect(g_hMainWindow, nullptr, FALSE);
         //}
         //else if ((InKey == VK_RIGHT)&& InIsPressed)
         //{
         //    Position.X += Speed;
-        //    if ((g_ScreenSize.X + PixelSize * 0.5f) < Position.X)
+        //    if ((GameManager::ScreenWidth + PixelSize * 0.5f) < Position.X)
         //    {
         //        Position.X = static_cast<float>(0 - PixelSize * 0.5f);
         //    }
