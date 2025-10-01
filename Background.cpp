@@ -1,19 +1,14 @@
 #include "Background.h"
 
-Background::Background(const wchar_t* InImagePath)
+Background::Background(const wchar_t* InImagePath) : Actor(InImagePath)
 {
-    Pivot.X = 0;    // 왼쪽 위가 피봇
-    Pivot.Y = 0;
+
+    SetSpeed(50.0f);
+
+    SetPivot({ 0,0 });
+   
     Position.Y = -PixelSize;
-    Image = new Gdiplus::Bitmap(InImagePath);  //  이미지 로딩
-    if (Image->GetLastStatus() != Gdiplus::Ok)
-    {
-        // 정상적으로 파일 로딩이 안됬다.
-        delete Image;           // 실패했으면 즉시 해제
-        Image = nullptr;
-        OutputDebugString(L"플레이어 이미지 로드 실패");
-        MessageBox(g_hMainWindow, L"플레이어 이미지 로드 실패", L"오류", MB_OK | MB_ICONERROR);
-    }
+    
 }
 
 Background::~Background()
