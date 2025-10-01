@@ -37,6 +37,3 @@ private:
 	std::unordered_map<InputDirection, bool> KeyWasPressedMap;
 };
 
-// 실습
-// ① TestActor만들기 -> 50픽셀 단위로 점찍어서 위치 확인 쉽게 할 수 있게 해주는 클래스
-// ② TestHouseActor만들기 -> 집모양 그려주는 클래스

@@ -36,6 +36,7 @@ Gdiplus::Graphics* g_BackBufferGraphics = nullptr;  // 백버퍼용 종이에 �
 
 Player* g_Player = nullptr;
 Background* g_Background = nullptr;
+Test* g_Test = nullptr;
 
 // 이 코드 모듈에 포함된 함수의 선언을 전달합니다:
 ATOM                MyRegisterClass(HINSTANCE hInstance);
@@ -104,6 +105,8 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
         InvalidateRect(g_hMainWindow, nullptr, FALSE);
     }
 
+    delete g_Test;
+    g_Test = nullptr;
     delete g_Background;
     g_Background = nullptr;
     delete g_Player;
@@ -228,13 +231,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 
             g_Background->OnRender(g_BackBufferGraphics);
 
-            for (int y = 0; y < 16; y++)
-            {
-                for (int x = 0; x < 12; x++)
-                {
-                    g_BackBufferGraphics->FillRectangle(&BlueBrush, 50 * x, 50 * y, 5, 5);
-                }
-            }
+            g_Test->TestActor(g_BackBufferGraphics, BlueBrush);
 
             Gdiplus::Pen GreenPen(Gdiplus::Color(255, 0, 255, 0), 2.0f);
             Gdiplus::Point Positions[g_HouseVerticesCount];
