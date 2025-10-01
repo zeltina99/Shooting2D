@@ -35,6 +35,7 @@ Gdiplus::Graphics* g_BackBufferGraphics = nullptr;  // 백버퍼용 종이에 �
 
 
 Player* g_Player = nullptr;
+Background* g_Background = nullptr;
 
 // 이 코드 모듈에 포함된 함수의 선언을 전달합니다:
 ATOM                MyRegisterClass(HINSTANCE hInstance);
@@ -58,6 +59,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
     Gdiplus::GdiplusStartupInput StartupInput;
     Gdiplus::GdiplusStartup(&Token, &StartupInput, nullptr);
     g_Player = new Player(L"./Images/Airplane.png");
+    g_Background = new Background(L"./Images/EffectB.png");
 
     // 전역 문자열을 초기화합니다.
     LoadStringW(hInstance, IDS_APP_TITLE, szTitle, MAX_LOADSTRING);
@@ -90,10 +92,12 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
                 DispatchMessage(&msg);
             }
         }
-
-
+        g_Background->Tick();
+        InvalidateRect(g_hMainWindow, nullptr, FALSE);
     }
 
+    delete g_Background;
+    g_Background = nullptr;
     delete g_Player;
     g_Player = nullptr;
     // GDI+ 정리하기
@@ -214,12 +218,13 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
             Gdiplus::SolidBrush BlueBrush(Gdiplus::Color(255, 0, 0, 255));
             Gdiplus::SolidBrush YelloBrush(Gdiplus::Color(255, 255, 255, 0));
 
+            g_Background->Render(g_BackBufferGraphics);
 
             for (int y = 0; y < 16; y++)
             {
                 for (int x = 0; x < 12; x++)
                 {
-                    g_BackBufferGraphics->FillRectangle(&YelloBrush, 50 * x, 50 * y, 5, 5);
+                    g_BackBufferGraphics->FillRectangle(&BlueBrush, 50 * x, 50 * y, 5, 5);
                 }
             }
 
@@ -232,7 +237,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
             g_BackBufferGraphics->DrawPolygon(&GreenPen, Positions, g_HouseVerticesCount);
             //g_BackBufferGraphics->FillPolygon(&GreenBrush, Positions, g_HouseVerticesCount);
 
-           
+            
             g_Player->Render(g_BackBufferGraphics);
 
             Gdiplus::Graphics GraphicsInstance(hdc);    // Graphics객체 만들기

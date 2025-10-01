@@ -1,14 +1,11 @@
 #pragma once
 #include <unordered_map>
-#include <windows.h>
-#include <gdiplus.h>
+#include "Common.h"
 #include "enums.h"
 
 // extern : 뒤에 있는 변수가 다른 파일에 선언이 되어 있다.
-extern HWND g_hMainWindow;	// g_hMainWindow가 다른 파일에 있다는 것을 알려줌
-extern Gdiplus::Point g_ScreenSize;
 
-using PointF = Gdiplus::PointF;
+
 class Player
 {
 	/*

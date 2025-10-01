@@ -1,4 +1,5 @@
 #include "Player.h"
+#include "Background.h"
 
 Player::Player(const wchar_t* InImagePath)
 {
@@ -30,6 +31,8 @@ Player::~Player()
     }
 }
 
+
+
 void Player::Render(Gdiplus::Graphics* InGraphics)
 {
     if (Image)
@@ -59,24 +62,24 @@ void Player::HandleKeyState(WPARAM InKey, bool InIsPressed)
     {
         KeyWasPressedMap[static_cast<InputDirection>(InKey)] = InIsPressed;
 
-        if (InKey == VK_LEFT)
+        if ((InKey == VK_LEFT)&& InIsPressed)
         {
             Position.X -= Speed;
-            if (Position.X < (0 + PixelSize))
+            if (Position.X < (0 - PixelSize * 0.5f) )
             {
-                Position.X = 0 + PixelSize;
+                Position.X = g_ScreenSize.X + PixelSize * 0.5f; // 순환 이동
             }
-            InvalidateRect(g_hMainWindow, nullptr, FALSE);
+            //InvalidateRect(g_hMainWindow, nullptr, FALSE);
         }
-        else if (InKey == VK_RIGHT)
+        else if ((InKey == VK_RIGHT)&& InIsPressed)
         {
             Position.X += Speed;
-            if ((g_ScreenSize.X - PixelSize) < Position.X)
+            if ((g_ScreenSize.X + PixelSize * 0.5f) < Position.X)
             {
-                Position.X = static_cast<float>(g_ScreenSize.X - PixelSize);
+                Position.X = static_cast<float>(0 - PixelSize * 0.5f);
             }
 
-            InvalidateRect(g_hMainWindow, nullptr, FALSE);
+            //InvalidateRect(g_hMainWindow, nullptr, FALSE);
         }
     }
 }
