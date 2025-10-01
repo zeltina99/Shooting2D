@@ -14,7 +14,9 @@ void GameManager::Initialize()
         MessageBox(hMainWindow, L"백 버퍼 그래픽스 생성 실패", L"오류", MB_OK | MB_ICONERROR);
     }
 
-    AddActor(new Background(L"./Images/EffectB.png"));
+    Background* background = new Background(L"./Images/EffectB.png");
+    background->SetRenderLayer(RenderLayer::Background);
+    AddActor(background);
     MainPlayer = new Player(L"./Images/Airplane.png");
     AddActor(MainPlayer);
     AddActor(new TestGridActor());
@@ -62,3 +64,11 @@ void GameManager::HandleKeyState(WPARAM InKey, bool InIsPressed)
 {
     MainPlayer->HandleKeyState(InKey, InIsPressed);
 }
+
+// 실습
+// ① RenderLayer 순서에 따라 그리도록 GameManager 수정하기
+// ② ResourceManager만들기
+//      - 싱글톤 클래스
+//      - 게임에서 사용될 모든 이미지파일을 관리
+//      - 원하는 이미지파일의 Bitmap 리턴
+//      - enum class 활용하기

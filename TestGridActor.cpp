@@ -5,7 +5,7 @@ TestGridActor::TestGridActor()
     :Actor(nullptr)
 {
     WindowWidth = GameManager::ScreenWidth;
-    WindowHeight = GameManager::ScreenWidth;
+    WindowHeight = GameManager::ScreenHeight;
 
     Size = 5;
     HalfSize = Size / 2;
