@@ -1,6 +1,7 @@
 #pragma once
 #include <Windows.h>
 #include <vector>
+#include <map>
 #include "Common.h"
 #include "Actor.h"
 #include "Player.h"
@@ -20,7 +21,7 @@ public:
 	void Render();
 	void HandleKeyState(WPARAM InKey, bool InIsPressed);
 
-	void AddActor(Actor* InActor) { Actors.push_back(InActor); }
+	void AddActor(RenderLayer InRenderLayer, Actor* InActor) { Actors[InRenderLayer].push_back(InActor); }
 
 	static constexpr unsigned int ScreenWidth = 600;
 	static constexpr unsigned int ScreenHeight = 800;
@@ -49,7 +50,8 @@ private:
 	GameManager(const GameManager&&) = delete;	// 이동 생성자 삭제
 	GameManager& operator=(const GameManager&&) = delete; // 이동 대입 연산자 삭제
 
-	std::vector<Actor*> Actors;
+	//std::vector<Actor*> Actors;
+	std::map<RenderLayer, std::vector<Actor*>> Actors;
 
 	HWND hMainWindow = nullptr;
 	Point AppPosition = Point(100, 100);
