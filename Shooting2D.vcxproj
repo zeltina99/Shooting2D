@@ -133,6 +133,7 @@
     <ClInclude Include="Resource.h" />
     <ClInclude Include="ResourceManager.h" />
     <ClInclude Include="Shooting2D.h" />
+    <ClInclude Include="Singleton.h" />
     <ClInclude Include="targetver.h" />
     <ClInclude Include="TestGridActor.h" />
     <ClInclude Include="TestHouseActor.h" />
@@ -144,6 +145,7 @@
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="ResourceManager.cpp" />
     <ClCompile Include="Shooting2D.cpp" />
+    <ClCompile Include="Singleton.cpp" />
     <ClCompile Include="TestGridActor.cpp" />
     <ClCompile Include="TestHouseActor.cpp" />
   </ItemGroup>
