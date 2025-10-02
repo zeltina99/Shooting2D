@@ -4,10 +4,12 @@
 #include <set>
 #include <map>
 #include "Common.h"
+#include "PhysicsComponent.h"
 #include "Actor.h"
 #include "Player.h"
 #include "Singleton.h"
 #include "TestGridActor.h"
+#include "BombSpawner.h"
 
 // 게임내 모든 액터를 관리해줄 클래스
 class GameManager : public Singleton<GameManager>
@@ -24,7 +26,7 @@ public:
 	void HandleKeyState(WPARAM InKey, bool InIsPressed);
 
 	void RegistActor(RenderLayer InLayer, Actor* InActor);
-	inline void RequestDestroy(Actor* DestroyTarget) { PendingDestroyActors.push_back(DestroyTarget); }
+	inline void RequestDestroy(Actor* DestroyTarget) { PendingDestroyActors.push_back(DestroyTarget); };
 
 	static constexpr unsigned int ScreenWidth = 600;
 	static constexpr unsigned int ScreenHeight = 800;
@@ -42,19 +44,19 @@ public:
 			hMainWindow = InWindowHandle;	// 딱 한번만 설정할 수 있는 세터
 		}
 	}
+	inline void SetGameState(GameState InState) { State = InState; }
 protected:
 private:
-	// Singleton : 클래스의 인스턴스가 1개만 있는 클래스.
-	// private에 생성자를 넣어서 밖에서 인스턴스화 하는 것을 원천적으로 봉쇄
 	GameManager() = default;
 	virtual ~GameManager() = default;
 
 	void UnregisteActor(Actor* InActor);
+	void ProcessCollisions();					// 충돌 처리 함수
 	void ProcessPendingDestroyActors();			// 삭제 예정인 액터들을 실제로 정리하는 함수
 
-	//std::vector<Actor*> Actors;
 	std::map<RenderLayer, std::set<Actor*>> Actors;
 	std::vector<Actor*> PendingDestroyActors;	// 삭제 예정인 액터들의 목록
+	std::map<PhysicsLayer, std::vector<PhysicsComponent*>> PhysicsComponents; // 물리 컴포넌트 리스트
 
 	HWND hMainWindow = nullptr;
 	Point AppPosition = Point(100, 100);
@@ -62,5 +64,9 @@ private:
 	Gdiplus::Graphics* BackBufferGraphics = nullptr;  // 백버퍼용 종이에 그리기 위한 도구
 
 	Player* MainPlayer = nullptr;
+	BombSpawner* Spawner = nullptr;
+
 	TestGridActor* TestGrid = nullptr;
+
+	GameState State = GameState::Playing;
 };

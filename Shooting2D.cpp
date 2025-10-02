@@ -43,6 +43,12 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
     ResourceManager::Get().Initialize();    // GameManager보다 먼저 초기화 되어야 함
     GameManager::Get().Initialize();
        
+    TestCollisionActor* Test1 = Factory::Get().SpawnActor<TestCollisionActor>(ResourceID::Test);
+    Test1->SetPosition(100, 100);
+    TestCollisionActor* Test2 = Factory::Get().SpawnActor<TestCollisionActor>(ResourceID::Test);
+    Test2->SetPosition(140, 140);
+
+    Test1->PrintTestResult(Test2);
 
     // 전역 문자열을 초기화합니다.
     LoadStringW(hInstance, IDS_APP_TITLE, szTitle, MAX_LOADSTRING);
@@ -186,6 +192,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
     //    // 윈도우가 생성되었을때 날아오는 메시지
     //    break;
     case WM_DESTROY:
+        // 윈도우가 삭제되었을때 날아오는 메시지
         PostQuitMessage(0);
         break;
     case WM_PAINT:
@@ -250,3 +257,20 @@ INT_PTR CALLBACK About(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam)
     }
     return (INT_PTR)FALSE;
 }
+
+/*
+    충돌처리
+    - 원과 원의 겹침
+     - 두 원의 반지름의 합과 두 원의 중심점간의 거리를 비교
+     - 반지름의 합>중심점간의 거리 => 겹쳤다.
+     - 반지름의 합 == 중심점간의 거리 => 접촉했다.
+     - 반지름의 합 < 중심점간의 거리 => 안 겹쳤다.
+     - 중심점간의 거리:sqrt((x의차이)^2 + (y의차이)^2)
+
+
+    - 사각형과 사각형의 겹침(AABB)
+
+
+
+    - 원과 사각형의 겹침
+*/
