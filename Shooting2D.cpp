@@ -271,6 +271,5 @@ INT_PTR CALLBACK About(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam)
     - 사각형과 사각형의 겹침(AABB)
 
 
-
     - 원과 사각형의 겹침
 */
