@@ -30,13 +30,13 @@ void Player::OnTick(float InDeltaTime)
         Position.X += MoveDistance;
     }
 
-    if (Position.X < (0 - Size * 0.5f))
+    if (Position.X < Size * 0.5f)
     {
-        Position.X = GameManager::ScreenWidth + Size * 0.5f; // 순환 이동
+        Position.X = Size * 0.5f;
     }
-    else if ((GameManager::ScreenWidth + Size * 0.5f) < Position.X)
+    else if (Position.X > GameManager::ScreenWidth - Size * 0.5f)
     {
-        Position.X = static_cast<float>(0 - Size * 0.5f);
+        Position.X = GameManager::ScreenWidth - Size * 0.5f;
     }
 }
 

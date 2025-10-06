@@ -33,11 +33,14 @@ void TimerUI::OnTick(float deltaTime)
 
 void TimerUI::OnRender(Gdiplus::Graphics* graphics)
 {
-	if (!graphics) return;
+	if (!graphics) 
+	{
+		return;
+	}
 
 	int digitCount = static_cast<int>(digits.size());
 	int indexOffset = digitCount;
-	for (int i = 0; i < digitCount; ++i)
+	for (int i = 0; i < digitCount; i++)
 	{
 		if (i == 2)
 		{
@@ -58,12 +61,12 @@ void TimerUI::SetNumber(float number)
 		targetNumber = number; // 목표 숫자 업데이트
 
 		digits.clear(); // 이전에 저장된 숫자 제거
-		int number = static_cast<int>(targetNumber * 100.0f); // 소수점 둘째 자리까지 고려. 그 아래는 버림 처리
+		int scaled = static_cast<int>(targetNumber * 100.0f); // 소수점 둘째 자리까지 고려. 그 아래는 버림 처리
 		do
 		{
-			digits.push_back(number % 10);	// 현재 자리 숫자를 추가
-			number /= 10;					// 다음 자리로 이동
-		} while (number > 0);	// 모든 자리 숫자를 처리할 때까지 반복(targetNumber가 시작부터 0인 경우를 대비해 do-while사용)
+			digits.push_back(scaled % 10);	// 현재 자리 숫자를 추가
+			scaled /= 10;					// 다음 자리로 이동
+		} while (scaled > 0);	// 모든 자리 숫자를 처리할 때까지 반복(targetNumber가 시작부터 0인 경우를 대비해 do-while사용)
 
 		// 최소 0.00출력이 되어야 한다.
 		const int minimumDigits = 3; // 최소 3자리 숫자(0.00) 보장

@@ -5,6 +5,8 @@
 #include "ResourceManager.h"
 #include "Factory.h"
 #include "PhysicsComponent.h"
+#include <gdiplus.h>
+#pragma comment(lib, "gdiplus.lib") // 링크 단계
 
 void GameManager::Initialize()
 {

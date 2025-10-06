@@ -4,61 +4,62 @@
 
 bool PhysicsComponent::IsCollision(PhysicsComponent* InOther) const
 {
-	bool Result = false;
+	bool Result = false;	// 기본 결과값: 충돌 아님
 
-	if (!InOther || InOther == this)
+	if (!InOther || InOther == this)	// 상대가 없거나 자기 자신이면
 	{
-		return Result;
+		return Result;	// 충돌 아니므로 종료
 	}
 
 	if(this->GetLayer() == PhysicsLayer::None || InOther->GetLayer() == PhysicsLayer::None)
 	{
-		return Result;
+		return Result;	// 물리 레이어가 None이면 충돌 계산 대상 아님
 	}
 	
-	if (Collision == InOther->GetCollitionType())
+	if (Collision == InOther->GetCollitionType())	// 두 컴포넌트의 충돌 모양이 같다면
 	{
-		switch (Collision)
+		switch (Collision)	// 모양에 따라 분기
 		{
 		case CollisionType::Circle:
-			Result = CheckCircletToCircleCollision(this, InOther);
+			Result = CheckCircletToCircleCollision(this, InOther);	// 원ㅡ원
 			break;
 		case CollisionType::Rectangle:
-			Result = CheckRectToRectCollision(this, InOther);
+			Result = CheckRectToRectCollision(this, InOther);	// 사각형ㅡ사각형(AABB)
 			break;
 		}
 	}
+	// 모양이 다르면
 	else
 	{
-		Result = CheckCircletToRectCollision(this, InOther);
+		Result = CheckCircletToRectCollision(this, InOther);	// 원ㅡ사각형 처리
 	}
 
-	return Result;
+	return Result;	// 최종 충돌 여부 반환
 }
 
 bool PhysicsComponent::CheckCircletToCircleCollision(const PhysicsComponent* InFrom, const PhysicsComponent* InTo)
 {
-	if (!InFrom || !InTo)
+	if (!InFrom || !InTo)	// 안전성 체크
 	{
 		return false;
 	}
 
-	const PointF& From = InFrom->GetOwner()->GetPosition();
-	const PointF& To = InTo->GetOwner()->GetPosition();
+	const PointF& From = InFrom->GetOwner()->GetPosition();	// 원1의 중심 좌표
+	const PointF& To = InTo->GetOwner()->GetPosition();		// 원2의 중심 좌표
 
-	float dx = To.X - From.X;
-	float dy = To.Y - From.Y;
-	float squaredDistance = dx * dx + dy * dy;
+	float dx = To.X - From.X;								// 두 중심 간 x 차
+	float dy = To.Y - From.Y;								// 두 중심 간 y 차
+	float squaredDistance = dx * dx + dy * dy;				// 거리^2 (루트 피하기 위한 최적화)
 
-	float radiusSum = InFrom->GetRadius() + InTo->GetRadius();
-	float squaredRadiusSum = radiusSum * radiusSum;
+	float radiusSum = InFrom->GetRadius() + InTo->GetRadius();	// 반지름 합
+	float squaredRadiusSum = radiusSum * radiusSum;				// (반지름 합)^2
 
-	return squaredDistance <= squaredRadiusSum;
+	return squaredDistance <= squaredRadiusSum;		// 거리^2 <= (반지름 합)^2 이면 접촉/충돌
 }
 
 bool PhysicsComponent::CheckRectToRectCollision(const PhysicsComponent* InFrom, const PhysicsComponent* InTo)
 {
-	if (!InFrom || !InTo)
+	if (!InFrom || !InTo)			// 안전성 체크
 	{
 		return false;
 	}

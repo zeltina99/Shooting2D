@@ -17,8 +17,8 @@ public:
 protected:
 	int width = 0;		// 이미지 전체 너비
 	int height = 0;		// 이미지 전체 높이
-	PointF anchor = { 0.0f, 0.0f }; // 이미지 앵커 포인트
-	POINT anchoredPosition = { 0, 0 }; // 앵커를 기준으로한 위치
+	PointF anchor = { 0.0f, 0.0f }; // 이미지 앵커 포인트 (실수형)
+	POINT anchoredPosition = { 0, 0 }; // 앵커를 기준으로한 위치 (정수형)
 
 	void UpdatePosition();
 };

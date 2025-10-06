@@ -33,7 +33,7 @@ public:
 private:
 
 	// 플레이어의 이동 속도
-	float Speed = 200.0f;
+	float Speed = 300.0f;
 
 	// 플레이어 키 입력 상태
 	std::unordered_map<InputDirection, bool> KeyWasPressedMap;
