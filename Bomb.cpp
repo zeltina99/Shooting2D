@@ -55,3 +55,19 @@ void Bomb::OnOverlap(Actor* other)
 		DestroyActor();
 	}
 }
+
+void Bomb::Rescale(float scale)
+{
+	// Bomb의 기본 사이즈는 OnInitialize에서 ActorDefaultSize / 2 로 잡고 있으므로,
+   // 그 기준에 맞춰 스케일을 곱한다.
+	int newSize = static_cast<int>((GameManager::ActorDefaultSize * 0.5f) * scale);
+	SetSize(newSize);
+
+	// 충돌 컴포넌트도 새 크기에 맞춰 갱신
+	if (auto* physicsComponent = GetComponent<PhysicsComponent>())
+	{
+		float half = newSize * 0.5f;
+		physicsComponent->SetWidth(half);
+		physicsComponent->SetHeight(half * 0.75f);
+	}
+}

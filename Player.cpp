@@ -30,15 +30,36 @@ void Player::OnTick(float InDeltaTime)
         Position.X += MoveDistance;
     }
 
-    if (Position.X < Size * 0.5f)
+    if (KeyWasPressedMap[InputDirection::Up]) 
     {
-        Position.X = Size * 0.5f;
+        Position.Y -= MoveDistance; 
     }
-    else if (Position.X > GameManager::ScreenWidth - Size * 0.5f)
+    if (KeyWasPressedMap[InputDirection::Down]) 
     {
-        Position.X = GameManager::ScreenWidth - Size * 0.5f;
+        Position.Y += MoveDistance; 
     }
+
+    const float half = Size * 0.5f;
+    if (Position.X < half)
+    {
+        Position.X = half;
+    }
+    else if (Position.X > GameManager::ScreenWidth - half)
+    {
+        Position.X = GameManager::ScreenWidth - half;
+    }
+
+    if (Position.Y < half)
+    {
+        Position.Y = half;
+    }
+    else if (Position.Y > GameManager::ScreenHeight - half)
+    {
+        Position.Y = GameManager::ScreenHeight - half;
+    }
+
 }
+
 
 void Player::OnRender(Gdiplus::Graphics* InGraphics)
 {
@@ -68,8 +89,21 @@ void Player::OnOverlap(Actor* InOther)
 
 void Player::HandleKeyState(WPARAM InKey, bool InIsPressed)
 {
-    if (InKey == VK_LEFT || InKey == VK_RIGHT)
+    switch (InKey)
     {
-        KeyWasPressedMap[static_cast<InputDirection>(InKey)] = InIsPressed;
+    case VK_LEFT:
+        KeyWasPressedMap[InputDirection::Left] = InIsPressed;
+        break;
+    case VK_RIGHT:
+        KeyWasPressedMap[InputDirection::Right] = InIsPressed;
+        break;
+    case VK_UP:
+        KeyWasPressedMap[InputDirection::Up] = InIsPressed;
+        break;
+    case VK_DOWN:
+        KeyWasPressedMap[InputDirection::Down] = InIsPressed;
+        break;
+    default:
+        break;
     }
 }

@@ -8,6 +8,9 @@ void BombSpawner::OnInitialize()
 
     timeSinceLastSpawn = 0.0f;
     hasInitialDelayPassed = false;
+
+    ElapsedSinceStart = 0.0f;
+    CurrentScale = 1.0f;
 }
 
 void BombSpawner::OnTick(float deltaTime)
@@ -16,6 +19,14 @@ void BombSpawner::OnTick(float deltaTime)
 
     // 경과 시간 업데이트
     timeSinceLastSpawn += deltaTime;
+    ElapsedSinceStart += deltaTime;
+
+    // === 10초마다 폭탄 크기 1.5배씩 증가 ===
+    if (ElapsedSinceStart >= GrowthInterval)
+    {
+        ElapsedSinceStart -= GrowthInterval;
+        CurrentScale *= 1.5f; // 크기 1.5배 증가
+    }
 
     // 초기 지연 시간이 지났는지 확인
     if (!hasInitialDelayPassed)
@@ -31,10 +42,15 @@ void BombSpawner::OnTick(float deltaTime)
     // 초기 지연 시간이 지난 후의 폭탄 생성 로직
     if (timeSinceLastSpawn > spawnInterval)
     {
+        // 타이머 리셋 (다음 스폰 간격을 위해)
+        timeSinceLastSpawn -= spawnInterval;
+
         // 폭탄 생성
         Bomb* newBomb = Factory::Get().SpawnActor<Bomb>(ResourceID::Bomb, RenderLayer::Bomb);
 
-        // 타이머 리셋 (다음 스폰 간격을 위해)
-        timeSinceLastSpawn -= spawnInterval;
+        if (newBomb)
+        {
+            newBomb->Rescale(CurrentScale);
+        }
     }
 }

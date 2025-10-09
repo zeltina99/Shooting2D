@@ -16,4 +16,8 @@ private:
 
 	bool hasInitialDelayPassed = false;	// 초기 지연 시간이 지났는지 여부
 	float timeSinceLastSpawn = 0.0f;	// 마지막 폭탄 생성 이후 경과 시간
+
+	float ElapsedSinceStart = 0.0f; // 전체 경과 시간
+	float GrowthInterval = 10.0f;   // 10초마다 커짐
+	float CurrentScale = 1.0f;      // 현재 스케일 배수
 };
