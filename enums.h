@@ -38,7 +38,16 @@ enum class ResourceID : uint8_t
 	Number8,
 	Number9,
 	Dot,
-	Test,
+	Map1,
+	Map2,
+	Map3,
+	Map4,
+	Map5,
+	Map6,
+	Map7,
+	Map8,
+	Map9,
+	Test
 	// 이미지가 추가되면 enum 추가
 };
 

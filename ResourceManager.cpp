@@ -19,7 +19,16 @@ void ResourceManager::Initialize()
     LoadResourceFromFile(ResourceID::Number7, L"./Images/07.png");
     LoadResourceFromFile(ResourceID::Number8, L"./Images/08.png");
     LoadResourceFromFile(ResourceID::Number9, L"./Images/09.png");
-    LoadResourceFromFile(ResourceID::Dot, L"./Images/dot.png");
+    LoadResourceFromFile(ResourceID::Map1, L"./Images/Map1.png");
+    LoadResourceFromFile(ResourceID::Map2, L"./Images/Map2.png");
+    LoadResourceFromFile(ResourceID::Map3, L"./Images/Map3.png");
+    LoadResourceFromFile(ResourceID::Map4, L"./Images/Map4.png");
+    LoadResourceFromFile(ResourceID::Map5, L"./Images/Map5.png");
+    LoadResourceFromFile(ResourceID::Map6, L"./Images/Map6.png");
+    LoadResourceFromFile(ResourceID::Map7, L"./Images/Map7.png");
+    LoadResourceFromFile(ResourceID::Map8, L"./Images/Map8.png");
+    LoadResourceFromFile(ResourceID::Map9, L"./Images/Map9.png");
+    LoadResourceFromFile(ResourceID::Dot, L"./Images/Dot.png");
     LoadResourceFromFile(ResourceID::Test, L"./Images/Tile.png");
 }
 void ResourceManager::Destroy()
