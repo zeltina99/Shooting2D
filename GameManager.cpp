@@ -21,7 +21,7 @@ void GameManager::Initialize()
 
     MainPlayer = Factory::Get().SpawnActor<Player>(ResourceID::Player, RenderLayer::Player);
     Factory::Get().SpawnActor<Background>(ResourceID::Background, RenderLayer::Background);
-    TestGrid = Factory::Get().SpawnActor<TestGridActor>(ResourceID::None, RenderLayer::Test);
+    //TestGrid = Factory::Get().SpawnActor<TestGridActor>(ResourceID::None, RenderLayer::Test);
 
     Spawner = Factory::Get().SpawnActor<BombSpawner>(ResourceID::None);
     Timer = Factory::Get().SpawnActor<TimerUI>(ResourceID::None, RenderLayer::UI);

@@ -154,7 +154,7 @@ BOOL InitInstance(HINSTANCE hInstance, int nCmdShow)
     const Point StartPosition = GameManager::Get().GetAppPosition();
     // 실제 윈도우 생성
     HWND hWnd = CreateWindowW(szWindowClass,
-        L"2D Shooting for GDI+",
+        L"슈팅 게임",
         // WS_OVERLAPPEDWINDOW에서 
         // WS_MAXIMIZEBOX(최대화 버튼 비활성화)와 WS_THICKFRAME(테두리잡고 크기 변경 금지)만 제외
         WS_OVERLAPPEDWINDOW & ~WS_MAXIMIZEBOX & ~WS_THICKFRAME,
